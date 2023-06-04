@@ -37,6 +37,15 @@ public class BicycleController {
         return new ResponseEntity<List<Bicycle>>(bicycleRepository.findAll(), HttpStatus.OK);
     }
 
+    // URL: http://localhost:8080/api/leadyourway/v1/bicycles/{bicycleId}
+    // Method: GET
+    @Transactional(readOnly = true)
+    @GetMapping("/bicycles/{bicycleId}")
+    public ResponseEntity<Bicycle> getBicycleById(@PathVariable(name = "bicycleId") Long bicycleId) {
+        existsBicycleByBicycleId(bicycleId);
+        return new ResponseEntity<Bicycle>(bicycleService.getBicycleById(bicycleId), HttpStatus.OK);
+    }
+
     // URL: http://localhost:8080/api/leadyourway/v1/bicycles/filterByBicycleName
     // Method: GET
     @Transactional(readOnly = true)
@@ -44,30 +53,36 @@ public class BicycleController {
         return new ResponseEntity<List<Bicycle>>(bicycleRepository.findByBicycleName(bicycleName), HttpStatus.OK);
     }
 
-    // URL: http://localhost:8080/api/leadyourway/v1/bicycles
+    // URL: http://localhost:8080/api/leadyourway/v1/bicycles/{userId}
     // Method: POST
     @Transactional
-    @PostMapping("/bicycles")
-    public ResponseEntity<Bicycle> createBicycle(@RequestBody Bicycle bicycle) {
-        validateBicycle(bicycle);
-        existsBicycleByBicycleId(bicycle);
-        existsUserByUserId(bicycle.getUser().getId());
-
-        User user = userService.getUserById(bicycle.getUser().getId());
-        bicycle.setUser(user);
-
-        return new ResponseEntity<Bicycle>(bicycleService.createBicycle(bicycle), HttpStatus.CREATED);
-    }
-
-    // URL: http://localhost:8080/api/leadyourway/v1/{userId}/bicycles/
-    // Method: POST
-    @Transactional
-    @PostMapping("/{userId}/bicycles")
+    @PostMapping("/bicycles/{userId}")
     public ResponseEntity<Bicycle> createBicycleWithUserId(@PathVariable(name = "userId") Long userId, @RequestBody Bicycle bicycle) {
         existsUserByUserId(userId);
         bicycle.setUser(userService.getUserById(userId));
         validateBicycle(bicycle);
         return new ResponseEntity<Bicycle>(bicycleService.createBicycle(bicycle), HttpStatus.CREATED);
+    }
+
+    // URL: http://localhost:8080/api/leadyourway/v1/bicycles/{bicycleId}
+    // Method: PUT
+    @Transactional
+    @PutMapping("/bicycles/{bicycleId}")
+    public ResponseEntity<Bicycle> updateBicycleByBicycleId(@PathVariable(name = "bicycleId") Long bicycleId, @RequestBody Bicycle bicycle) {
+        existsBicycleByBicycleId(bicycleId);
+        bicycle.setId(bicycleId);
+        validateBicycle(bicycle);
+        return new ResponseEntity<Bicycle>(bicycleService.updateBicycle(bicycle), HttpStatus.OK);
+    }
+
+    // URL: http://localhost:8080/api/leadyourway/v1/bicycles/{bicycleId}
+    // Method: DELETE
+    @Transactional
+    @DeleteMapping("/bicycles/{bicycleId}")
+    public ResponseEntity<String> deleteBicycleByBicycleId(@PathVariable(name = "bicycleId") Long bicycleId) {
+        existsBicycleByBicycleId(bicycleId);
+        bicycleService.deleteBicycle(bicycleId);
+        return new ResponseEntity<String>("Bicicleta eliminada correctamente", HttpStatus.OK);
     }
 
     private void validateBicycle(Bicycle bicycle) {
@@ -110,12 +125,6 @@ public class BicycleController {
     private void existsBicycleByBicycleId(Long bicycleId) {
         if (!bicycleRepository.existsById(bicycleId)) {
             throw new ResourceNotFoundException("No existe la bicicleta con el id: " + bicycleId);
-        }
-    }
-
-    private void existsBicycleByBicycleId(Bicycle bicycle) {
-        if (bicycleRepository.existsById(bicycle.getId())) {
-            throw new ResourceNotFoundException("Ya existe la bicicleta con el id: " + bicycle.getId());
         }
     }
 }

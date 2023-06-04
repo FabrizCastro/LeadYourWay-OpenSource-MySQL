@@ -8,5 +8,5 @@ import java.util.List;
 public interface BicycleRepository extends JpaRepository<Bicycle, Long> {
     boolean existsByBicycleName(String bicycle_name);
     List<Bicycle> findByBicycleName(String bicycle_name);
-    List<Bicycle> findByBicyclePriceLessThan(double bicycle_price);
+    List<Bicycle> findByUserId(Long user_id);
 }

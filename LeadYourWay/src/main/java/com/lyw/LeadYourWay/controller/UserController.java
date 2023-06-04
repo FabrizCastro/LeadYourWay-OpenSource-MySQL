@@ -2,6 +2,7 @@ package com.lyw.LeadYourWay.controller;
 
 import com.lyw.LeadYourWay.exception.ResourceNotFoundException;
 import com.lyw.LeadYourWay.exception.ValidationException;
+import com.lyw.LeadYourWay.model.Bicycle;
 import com.lyw.LeadYourWay.model.User;
 import com.lyw.LeadYourWay.repository.UserRepository;
 import com.lyw.LeadYourWay.service.UserService;
@@ -31,6 +32,15 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
         return new ResponseEntity<List<User>>(userRepository.findAll(), HttpStatus.OK);
+    }
+
+    // URL: http://localhost:8080/api/leadyourway/v1/users/{userId}
+    // Method: GET
+    @Transactional(readOnly = true)
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable(name = "userId") Long userId) {
+        existsUserByUserId(userId);
+        return new ResponseEntity<User>(userService.getUserById(userId), HttpStatus.OK);
     }
 
     // URL: http://localhost:8080/api/leadyourway/v1/users/filterByEmail
@@ -89,6 +99,12 @@ public class UserController {
     private void existsUserByEmail(String email) {
         if (!userRepository.existsByUserEmail(email)) {
             throw new ResourceNotFoundException("No existe un usuario con el email " + email);
+        }
+    }
+
+    private void existsUserByUserId(Long userId) {
+        if (userService.getUserById(userId) == null) {
+            throw new ResourceNotFoundException("No existe un usuario con el id " + userId);
         }
     }
 

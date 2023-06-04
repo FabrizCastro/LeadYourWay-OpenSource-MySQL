@@ -29,7 +29,7 @@ public class Bicycle {
     @Column(name="bicycle_price", nullable = false)
     private double bicyclePrice;
 
-    @Column(name="bicycle_size", nullable = false, length = 1)
+    @Column(name="bicycle_size", nullable = false, length = 10)
     private String bicycleSize;
 
     @Column(name="bicycle_model", nullable = true, length = 50)

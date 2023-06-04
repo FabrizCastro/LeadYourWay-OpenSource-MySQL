@@ -15,4 +15,19 @@ public class BicycleServiceImpl implements BicycleService {
     public Bicycle createBicycle(Bicycle bicycle) {
         return bicycleRepository.save(bicycle);
     }
+
+    @Override
+    public Bicycle getBicycleById(Long bicycle_id) {
+        return bicycleRepository.findById(bicycle_id).orElse(null);
+    }
+
+    @Override
+    public Bicycle updateBicycle(Bicycle bicycle) {
+        return bicycleRepository.save(bicycle);
+    }
+
+    @Override
+    public void deleteBicycle(Long bicycle_id) {
+        bicycleRepository.deleteById(bicycle_id);
+    }
 }
