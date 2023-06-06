@@ -35,6 +35,9 @@ public class Card {
     @Column(name = "card_amount", nullable = false)
     private Double cardAmount;
 
+    @Column(name = "card_holder", nullable = false)
+    private String cardHolder;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false,
             foreignKey = @ForeignKey(name = "FK_USER_CARD_ID"))

@@ -128,6 +128,9 @@ public class CardController {
         if(card.getCardCvv() == null || card.getCardCvv().isEmpty()){
             throw new ValidationException("Card CVV is required");
         }
+        if(card.getCardHolder() == null || card.getCardHolder().isEmpty()){
+            throw new ValidationException("Card holder is required");
+        }
         if (card.getCardExpirationDate() == null){
             throw new ValidationException("Card expiry date is required");
         }
