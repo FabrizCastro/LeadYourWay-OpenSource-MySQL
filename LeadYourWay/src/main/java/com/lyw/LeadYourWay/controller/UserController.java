@@ -62,6 +62,27 @@ public class UserController {
         return new ResponseEntity<User>(userService.createUser(user), HttpStatus.CREATED);
     }
 
+    // URL: http://localhost:8080/api/leadyourway/v1/users/{userId}
+    // Method: PUT
+    @Transactional
+    @PutMapping("/users/{userId}")
+    public ResponseEntity<User> updateUser(@PathVariable(name = "userId") Long userId, @RequestBody User user) {
+        existsUserByUserId(userId);
+        validateUser(user);
+        user.setId(userId);
+        return new ResponseEntity<User>(userService.updateUser(user), HttpStatus.OK);
+    }
+
+    // URL: http://localhost:8080/api/leadyourway/v1/users/{userId}
+    // Method: DELETE
+    @Transactional
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<Void> deleteUser(@PathVariable(name = "userId") Long userId) {
+        existsUserByUserId(userId);
+        userService.deleteUser(userId);
+        return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+    }
+
     private void validateUser(User user) {
         if (user.getUserFirstName() == null || user.getUserFirstName().isEmpty()) {
             throw new ValidationException("El nombre del usuario debe ser obligatorio");

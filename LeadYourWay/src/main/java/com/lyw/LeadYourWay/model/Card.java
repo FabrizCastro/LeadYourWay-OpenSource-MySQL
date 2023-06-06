@@ -26,11 +26,14 @@ public class Card {
     @Column(name="card_type", nullable = false, length = 10)
     private String cardType;
 
-    @Column(name="card_cvv", nullable = false, length = 3)
+    @Column(name="card_cvv", nullable = false)
     private String cardCvv;
 
     @Column(name="card_expiration_date", nullable = false)
     private LocalDate cardExpirationDate;
+
+    @Column(name = "card_amount", nullable = false)
+    private Double cardAmount;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false,
