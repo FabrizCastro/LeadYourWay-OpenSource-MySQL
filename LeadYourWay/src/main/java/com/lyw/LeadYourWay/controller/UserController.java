@@ -52,6 +52,20 @@ public class UserController {
         return new ResponseEntity<List<User>>(userRepository.findByUserEmail(email), HttpStatus.OK);
     }
 
+    // URL: http://localhost:8080/api/leadyourway/v1/login
+    // Method: POST
+    @Transactional(readOnly = true)
+    @PostMapping("/login")
+    public ResponseEntity<Long> getUserIdByEmailAndPassword(@RequestBody User user) {
+        User foundUser = userRepository.findByUserEmailAndUserPassword(user.getUserEmail(), user.getUserPassword());
+        if (foundUser != null) {
+            return new ResponseEntity<Long>(foundUser.getId(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+
     // URL: http://localhost:8080/api/leadyourway/v1/users
     // Method: POST
     @Transactional

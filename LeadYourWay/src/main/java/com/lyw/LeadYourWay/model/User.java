@@ -38,6 +38,9 @@ public class User {
     @Column(name="user_birth_date", nullable = false)
     private LocalDate userBirthDate;
 
+    @Column(name="image_data", nullable = true)
+    private String imageData;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Bicycle> bicycles;
 

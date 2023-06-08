@@ -35,9 +35,8 @@ public class Bicycle {
     @Column(name="bicycle_model", nullable = true, length = 50)
     private String bicycleModel;
 
-    @Lob
-    @Column(name = "image_data", nullable = true)
-    private byte[] imageData;
+    @Column(name="image_data", nullable = true)
+    private String imageData;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false,
