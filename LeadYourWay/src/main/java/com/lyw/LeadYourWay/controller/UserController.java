@@ -84,7 +84,8 @@ public class UserController {
         existsUserByUserId(userId);
         validateUser(user);
         user.setId(userId);
-        return new ResponseEntity<User>(userService.updateUser(user), HttpStatus.OK);
+        return new ResponseEntity<User>(ifDifferentOrEmptyUpdate(user), HttpStatus.OK);
+        //return new ResponseEntity<User>(userService.updateUser(user), HttpStatus.OK);
     }
 
     // URL: http://localhost:8080/api/leadyourway/v1/users/{userId}
@@ -143,4 +144,27 @@ public class UserController {
         }
     }
 
+    private User ifDifferentOrEmptyUpdate(User user){
+        return userRepository.findById(user.getId()).map(userToUpdate -> {
+            if (user.getUserFirstName() != null && !user.getUserFirstName().isEmpty() && !user.getUserFirstName().equals(userToUpdate.getUserFirstName())) {
+                userToUpdate.setUserFirstName(user.getUserFirstName());
+            }
+            if (user.getUserLastName() != null && !user.getUserLastName().isEmpty() && !user.getUserLastName().equals(userToUpdate.getUserLastName())) {
+                userToUpdate.setUserLastName(user.getUserLastName());
+            }
+            if (user.getUserEmail() != null && !user.getUserEmail().isEmpty() && !user.getUserEmail().equals(userToUpdate.getUserEmail())) {
+                userToUpdate.setUserEmail(user.getUserEmail());
+            }
+            if (user.getUserPassword() != null && !user.getUserPassword().isEmpty() && !user.getUserPassword().equals(userToUpdate.getUserPassword())) {
+                userToUpdate.setUserPassword(user.getUserPassword());
+            }
+            if (user.getUserBirthDate() != null && !user.getUserBirthDate().equals(userToUpdate.getUserBirthDate())) {
+                userToUpdate.setUserBirthDate(user.getUserBirthDate());
+            }
+            if (user.getUserPhone() != null && !user.getUserPhone().isEmpty() && !user.getUserPhone().equals(userToUpdate.getUserPhone())) {
+                userToUpdate.setUserPhone(user.getUserPhone());
+            }
+            return userService.updateUser(userToUpdate);
+        }).orElseThrow(() -> new ResourceNotFoundException("User not found with id " + user.getId()));
+    }
 }
