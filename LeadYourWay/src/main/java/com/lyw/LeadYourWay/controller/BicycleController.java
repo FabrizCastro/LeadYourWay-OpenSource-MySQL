@@ -107,9 +107,6 @@ public class BicycleController {
         if (bicycle.getBicycleSize() == null || bicycle.getBicycleSize().isEmpty()) {
             throw new ValidationException("El tamaño de la bicicleta debe ser obligatorio");
         }
-        if (bicycle.getBicycleSize().length() != 1) {
-            throw new ValidationException("El tamaño de la bicicleta debe ser de un solo caracter");
-        }
         if (bicycle.getUser() == null) {
             throw new ValidationException("El usuario de la bicicleta debe ser obligatorio");
         }
